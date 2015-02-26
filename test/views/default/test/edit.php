@@ -1,21 +1,27 @@
+<?php
+/**
+ * Elgg edit profile form
+ *
+ * @package Elgg
+ * @subpackage Core
+ */
+
+?>
+
 <div align="left">
 <label>Google Authenticator Setting</label>
 <form>
-secret: <input type="text" id="mysecret" name="secret" value="" readonly>
+<br>
+secret: <input type="text" id="mysecret" name="secret" value="" >
 <br>
 <input type="Button" class="elgg_button" value="Create new secret" width="610px" onclick = "newSecret()" >
-<input type="Button" id="qrcodebtn" value="Show/Refresh qrcode" width="610px" onclick = "genQrCode()" >
+<input type="Button" id="qrcodebtn" class="elgg_button" value="Show/Refresh qrcode" width="610px" onclick = "genQrCode()" >
 </form>
 <br>
 </div>
-<div id="qrcode" style="text-align: center;margin-left: auto;margin-right: auto;width:300px"></div>
+<div id="qrcode" style="text-align: center;margin-left: auto;margin-right: auto;width:700px"></div>
 <br>
 
-<input type="Text" id="codeinp" value="" width="200px">
-<input type="Button" id="qrcodeverify" value="Verify" width="100px" onclick = "verifyQrCode()" >
-<br>
-<div id="verifyok" style="color:green;display:none;">Code is Correct</div>
-<div id="verifyerror" style="color:red;display:none;">Wrong code or server error</div>
 
 <script type="text/javascript">
 
@@ -60,24 +66,20 @@ function newSecret()
         {
             //alert(xmlhttp.responseText);
           xstr=xmlhttp.responseText;
+		  if(xstr != "")
+		  {
+             var res = xstr.split(";");
+             qrurl = res[1];
+             document.getElementById('mysecret').value = res[0];
+		  }
+		  else
+          {
+             alert("Empty Str!")
+          }
         }
     }
-    xmlhttp.open("POST","mod/test/pages/test/coder.php",false);
+    xmlhttp.open("POST","mod/test/views/default/test/coder.php",true);
     xmlhttp.send();
-    
-    if(xstr != "")
-    {
-         var res = xstr.split(";");
-        qrurl = res[1];
-        document.getElementById('mysecret').value = res[0];
-        
-    }
-    else
-    {
-        alert("Empty Str!")
-    }
-    
-    
 
 }
 
@@ -93,63 +95,4 @@ function genQrCode()
 	qrcode.makeCode(qrurl);
 
 }
-
-
-function verifyQrCode()
-{
-    var secret=document.getElementById('mysecret').value;
-    var code = document.getElementById('codeinp').value;
-    if(secret == "")
-    {
-        alert("secret is empty");
-    }
-    else if(code == "")
-    {
-        alert("code is empty");
-    }
-    else
-    {
-        window.XMLHttpRequest
-        {
-            xmlhttp = new XMLHttpRequest();
-        }
-
-        xmlhttp.onreadystatechange=function() 
-        {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) 
-            {
-                if(xmlhttp.responseText=="T")
-                {
-                    var ok = document.getElementById('verifyok');
-                    var error = document.getElementById('verifyerror');
-                    ok.style.display = 'block';
-                    error.style.display = 'none';
-                }
-                else
-                {
-                    var ok = document.getElementById('verifyok');
-                    var error = document.getElementById('verifyerror');
-                    ok.style.display = 'none';
-                    error.style.display = 'block';
-                }
-              //xstr=xmlhttp.responseText;
-            }
-        }
-        
-        var params = "secret="+secret+"&code="+code;
-        
-        xmlhttp.open("POST","mod/test/pages/test/decoder.php",true);
-        
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.setRequestHeader("Content-length", params.length);
-        
-        // alert(params);
-        xmlhttp.send(params);
-    }
-    //alert(qrurl);
-}
-
-
-
-
 </script>
