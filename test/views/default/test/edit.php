@@ -78,7 +78,7 @@ function newSecret()
           }
         }
     }
-    xmlhttp.open("POST","mod/test/views/default/test/coder.php",true);
+    xmlhttp.open("POST","/elgg-1.8.18/mod/test/views/default/test/coder.php",true);
     xmlhttp.send();
 
 }

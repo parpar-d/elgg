@@ -1,6 +1,6 @@
 <?php
 
-require_once 'GoogleAuthenticator.php';
+require_once './GoogleAuthenticator.php';
 
 $ga = new GoogleAuthenticator();
 
