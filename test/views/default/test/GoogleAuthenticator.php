@@ -29,6 +29,7 @@ class GoogleAuthenticator
         for ($i = 0; $i < $secretLength; $i++) {
             $secret .= $validChars[array_rand($validChars)];
         }
+	
         return $secret;
     }
 
