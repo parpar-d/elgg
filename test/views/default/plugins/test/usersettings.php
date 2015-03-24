@@ -1,17 +1,23 @@
 <?php
-
+/**
+* User settings edit code
+* 
+*/
+// get previously saved settings
+$guid = elgg_get_page_owner_guid();
+$settings = elgg_get_all_plugin_user_settings($guid, 'test');
+$secret=$settings['secret'];
+$name='username@elgg';
+$qrCodeurl='otpauth://totp/'.$name.'?secret='.$secret;
 ?>
 
 <div align="left">
 <label>Google Authenticator Setting</label>
+<br />
+<?php echo "1)Click Create new secret button<br>2)Click Show/Refresh qrcode button<br>3)Scan qrcode with google authenticator software<br>4)Click save button to save secret" ?>
 <form>
 <br>
-<?php echo "<div>";
-$ga = new GoogleAuthenticator();
-$secret = $ga->createSecret();
-//echo elgg_view("input/text", array("name" => "params[test]", "value" => elgg_get_plugin_user_setting('test', elgg_get_page_owner_guid(),'test')));
-echo "</div>";  ?>
-secret:<input type="text" id="mysecret" name="secret" value="<?php elgg_set_plugin_user_setting('test',$secret,elgg_get_page_owner_guid(),'test')?>" >
+secret: <input type="text" id="mysecret" name="secret" value="<?php echo $secret; ?>" >
 <br>
 <input type="Button" class="elgg_button" value="Create new secret" width="610px" onclick = "newSecret()" >
 <input type="Button" id="qrcodebtn" class="elgg_button" value="Show/Refresh qrcode" width="610px" onclick = "genQrCode()" >
@@ -33,8 +39,10 @@ var qrcode = new QRCode(document.getElementById("qrcode"),
 	height : 200
 });
 
-var qrurl;
-
+var qrurl="";
+if('<?php echo $secret; ?>'!=""){
+	qrurl='<?php echo $qrCodeurl; ?>';
+};
 function stringGen(len)
 {
     var text = "";
