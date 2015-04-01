@@ -8,8 +8,7 @@ $guid = elgg_get_page_owner_guid();
 $settings = elgg_get_all_plugin_user_settings($guid, 'test');
 $secret=$settings['secret'];
 $name='username@elgg';
-$qrCodeurl='otpauth://totp/'.$name.'?secret='.$secret;
-?>
+$qrCodeUrl = 'otpauth://totp/'.$name.'?secret='.$secret;?>
 
 <div align="left">
 <label>Google Authenticator Setting</label>
