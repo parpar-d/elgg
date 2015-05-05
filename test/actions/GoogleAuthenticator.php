@@ -2,6 +2,11 @@
 
 /**
  * PHP Class for handling Google Authenticator 2-factor authentication
+ *
+ * @author Michael Kliewe
+ * @copyright 2012 Michael Kliewe
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @link http://www.phpgangsta.de/
  */
 
 class GoogleAuthenticator
@@ -24,7 +29,6 @@ class GoogleAuthenticator
         for ($i = 0; $i < $secretLength; $i++) {
             $secret .= $validChars[array_rand($validChars)];
         }
-	
         return $secret;
     }
 
@@ -70,7 +74,7 @@ class GoogleAuthenticator
      * @return string
      */
     public function getQRCodeGoogleUrl($name, $secret) {
-        $urlencoded = urlencode('otpauth://totp/'.$name.'?secret='.$secret.'');
+        $urlencoded = urlencode($secret);
         return 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl='.$urlencoded.'';
     }
 

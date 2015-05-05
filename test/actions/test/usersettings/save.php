@@ -1,19 +1,4 @@
 <?php
-/**
- * Saves user-specific plugin settings.
- *
- * This action can be overriden for a specific plugin by creating the
- * <plugin_id>/usersettings/save action in that plugin.
- *
- * @uses array $_REQUEST['params']    A set of key/value pairs to save to the ElggPlugin entity
- * @uses int   $_REQUEST['plugin_id'] The id of the plugin
- * @uses int   $_REQUEST['user_guid'] The GUID of the user to save settings for.
- *
- * @package Elgg.Core
- * @subpackage Plugins.Settings
- */
-
-//$params = get_input('params');
 $secret=get_input('secret');
 $plugin_id = get_input('plugin_id');
 $user_guid = get_input('user_guid', elgg_get_logged_in_user_guid());
@@ -38,25 +23,16 @@ if (!$user->canEdit()) {
 	forward(REFERER);
 }
 
-$result = false;
+//save
+if (isset($secret)) {
+	$result = $plugin->setUserSetting('secret', $secret, $user->guid);
 
-if (elgg_action_exists("$plugin_id/actions/test/usersettings/save")) {
-	action("$plugin_id/actions/test/usersettings/save");
-} else {
-	$result=$plugin->setUserSetting('secret',$secret,$user->guid);
-	if(!$result){
-		register_error(elgg_echo('plugins:usersettings:save:fail',array($plugin_name)));
+	if (!$result) {
+		register_error(elgg_echo('plugins:usersettings:save:fail', array($plugin_name)));
 		forward(REFERER);
 	}
-	foreach ($params as $k => $secret) {
-		// Save
-		$result = $plugin->setUserSetting($k, $secret, $user->guid);
-		// Error?
-		if (!$result) {
-			register_error(elgg_echo('plugins:usersettings:save:fail', array($plugin_name)));
-			forward(REFERER);
-		}
-	}
+} else {
+	$plugin->unsetUserSetting('secret', $user->guid);
 }
 
 system_message(elgg_echo('plugins:usersettings:save:ok', array($plugin_name)));

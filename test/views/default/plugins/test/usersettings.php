@@ -3,20 +3,23 @@
 * User settings edit code
 * 
 */
+elgg_register_event_handler('init', 'system', 'test_init');
 // get previously saved settings
 $guid = elgg_get_page_owner_guid();
 $settings = elgg_get_all_plugin_user_settings($guid, 'test');
 $secret=$settings['secret'];
-$name='username@elgg';
-$qrCodeUrl = 'otpauth://totp/'.$name.'?secret='.$secret;?>
+$name = get_loggedin_user()->username;
+$qrCodeUrl = 'otpauth://totp/'.$name.'@Elgg?secret='.$secret;
+?>
 
 <div align="left">
-<label>Google Authenticator Setting</label>
+<label><h2>Two Step Verification Settings</h2></label>
 <br />
-<?php echo "1)Click Create new secret button<br>2)Click Show/Refresh qrcode button<br>3)Scan qrcode with google authenticator software<br>4)Click save button to save secret" ?>
+<?php echo "1)Click Create new secret button<br>2)Click Show/Refresh qrcode button<br>3)Scan qrcode with OTP Authenticator Apps<br>4)Click save button to save secret" ?>
+
 <form>
 <br>
-secret: <input type="text" id="mysecret" name="secret" value="<?php echo $secret; ?>" >
+<h3>Your Secret:</h3> <input type="text" id="mysecret" name="secret" value="<?php echo $secret; ?>" readonly>
 <br>
 <input type="Button" class="elgg_button" value="Create new secret" width="610px" onclick = "newSecret()" >
 <input type="Button" id="qrcodebtn" class="elgg_button" value="Show/Refresh qrcode" width="610px" onclick = "genQrCode()" >
@@ -80,13 +83,13 @@ function newSecret()
 		  }
 		  else
           {
-             alert("Empty Str!")
+             alert("You don't have a secret!");
           }
         }
     }
-    xmlhttp.open("POST","/elgg-1.8.18/mod/test/views/default/test/coder.php",true);
+	var currentuser = "<?php echo $name; ?>";
+    xmlhttp.open("GET","http://localhost:8080/elgg-1.8.18/mod/test/views/default/test/coder.php?user="+currentuser,true);
     xmlhttp.send();
-
 }
 
 function genQrCode()
@@ -94,7 +97,7 @@ function genQrCode()
 	
 	if (qrurl=="") 
     {
-		alert("Generate a text");
+		alert("Generate a secret");
 		return;
 	}
 	

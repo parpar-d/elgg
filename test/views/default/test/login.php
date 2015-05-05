@@ -1,17 +1,10 @@
 <?php
-/**
- * Elgg login form
- *
- * @package Elgg
- * @subpackage Core
- */
+// Elgg login form
 ?>
-<legend  ><div  >
-<label ><?php echo elgg_echo('Google Authenticator Code');?><label>
-
+<legend><div>
+<label><?php echo elgg_echo('Two Step Verification Code');?><label>
 <?php echo elgg_view('input/text', array('name' => 'googleauthenticatorcode',
 		)); ?>
-
 </div></legend>
 
 

@@ -6,11 +6,10 @@ $ga = new GoogleAuthenticator();
 
 $secret = $ga->createSecret();
 
-$name = 'username@elgg';
-$qrCodeUrl = 'otpauth://totp/'.$name.'?secret='.$secret;
+$name = $_GET['user'];
+$qrCodeUrl = 'otpauth://totp/'.$name.'@Elgg?secret='.$secret;
 
 echo $secret.';'.$qrCodeUrl;
-
 //$res = array();
 //$res['secret'] = $secret;
 //$res['url'] = $qrCodeUrl;
