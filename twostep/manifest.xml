@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
-	<name>Test</name>
-	<id>test</id>
+	<name>TwoStep</name>
+	<id>twostep</id>
 	<description>Two Step Verification Plugin</description>
 	<author>Parisa Dolatabadi</author>
 	<version>1.8</version>

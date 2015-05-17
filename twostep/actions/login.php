@@ -39,7 +39,7 @@ if ($result !== true) {
 $user = get_user_by_username($username);
 $userGuid = $user->getGUID();
 //get secret from database
-$secret=elgg_get_plugin_user_setting('secret',$userGuid, 'test');
+$secret=elgg_get_plugin_user_setting('secret',$userGuid, 'twostep');
 //check for first login
 if($secret==NULL)
 {
@@ -79,8 +79,28 @@ if($output == true)
 }
 else
   {
+	//login with backup code
+	$backup=elgg_get_plugin_user_setting('backup',$userGuid, 'twostep');
+    if($code==$backup)
+	{
+		$user = get_user_by_username($username);
+        try
+        {
+	    login($user, $persistent);
+	    // re-register at least the core language file for users with language other than site default
+	    register_translations(dirname(dirname(__FILE__)) . "/languages/");
+        } 
+        catch (LoginException $e) 
+        {
+	    register_error($e->getMessage());
+	    forward(REFERER);
+        }
+	}
+else
+{
 	register_error(elgg_echo('Please carefully fill all the fields.'));
 	forward();
+}
   }
 }
 // elgg_echo() caches the language and does not provide a way to change the language.

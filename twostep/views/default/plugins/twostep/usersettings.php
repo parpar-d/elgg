@@ -3,11 +3,12 @@
 * User settings edit code
 * 
 */
-elgg_register_event_handler('init', 'system', 'test_init');
+elgg_register_event_handler('init', 'system', 'twostep_init');
 // get previously saved settings
 $guid = elgg_get_page_owner_guid();
-$settings = elgg_get_all_plugin_user_settings($guid, 'test');
+$settings = elgg_get_all_plugin_user_settings($guid, 'twostep');
 $secret=$settings['secret'];
+$backup=$settings['backup'];
 $name = get_loggedin_user()->username;
 $qrCodeUrl = 'otpauth://totp/'.$name.'@Elgg?secret='.$secret;
 ?>
@@ -21,6 +22,8 @@ $qrCodeUrl = 'otpauth://totp/'.$name.'@Elgg?secret='.$secret;
 <br>
 <h3>Your Secret:</h3> <input type="text" id="mysecret" name="secret" value="<?php echo $secret; ?>" readonly>
 <br>
+<h3>Your Backup Code:</h3> <input type="text" id="mybackup" name="backup" value="<?php echo $backup; ?>" readonly>
+<br />
 <input type="Button" class="elgg_button" value="Create new secret" width="610px" onclick = "newSecret()" >
 <input type="Button" id="qrcodebtn" class="elgg_button" value="Show/Refresh qrcode" width="610px" onclick = "genQrCode()" >
 </form>
@@ -48,7 +51,6 @@ if('<?php echo $secret; ?>'!=""){
 function stringGen(len)
 {
     var text = "";
-
     var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
     for( var i=0; i < len; i++ )
@@ -59,6 +61,15 @@ function stringGen(len)
 
 function newSecret()
 {
+	//create backup code
+	var text = "";
+    var charset = "0123456789";
+	for( var i=0; i < 6; i++ )
+        text += charset.charAt(Math.floor(Math.random() * charset.length));
+
+    //return text;
+	document.getElementById('mybackup').value = text;
+
     var xstr = "";
     qrurl = "";
     document.getElementById('mysecret').value = "";
@@ -88,8 +99,9 @@ function newSecret()
         }
     }
 	var currentuser = "<?php echo $name; ?>";
-    xmlhttp.open("GET","http://localhost:8080/elgg-1.8.18/mod/test/views/default/test/coder.php?user="+currentuser,true);
+    xmlhttp.open("GET","http://localhost:8080/elgg-1.8.18/mod/twostep/views/default/twostep/coder.php?user="+currentuser,true);
     xmlhttp.send();
+	
 }
 
 function genQrCode()
