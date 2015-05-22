@@ -99,7 +99,7 @@ function newSecret()
         }
     }
 	var currentuser = "<?php echo $name; ?>";
-    xmlhttp.open("GET","http://localhost:8080/elgg-1.8.18/mod/twostep/views/default/twostep/coder.php?user="+currentuser,true);
+    xmlhttp.open("GET",elgg.get_site_url()+'mod/twostep/views/default/twostep/coder.php?user='+currentuser,true);
     xmlhttp.send();
 	
 }
